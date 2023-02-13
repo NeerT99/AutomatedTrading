@@ -16,7 +16,7 @@ myOrder = {
     "EntryPrice": float(input("Entry Price? ")),
     "StopLoss": float(input("Stop Loss? ")),
     "TakeProfit": float(input("Take Profit? ")),
-    "Symbol": input("Symbol? (exclude USDT) ")+"USDT",
+    "Symbol": input("Symbol? (exclude USDT) ")
 }
 
 # Convert the dictionary to a JSON string with double quotation marks
