@@ -25,3 +25,10 @@ json_string = json.dumps(myOrder)
 # Print the JSON string
 print(json_string)
 
+
+# Note:
+
+# This JSON string is what you want to put in the 'Alert Name' of every alert you set.
+
+# If you are running a PineScript strategy, then this is not needed, as long as the output of your strategy has the same template as this alert. 
+Also you may want to change the limit orders to market orders, and change the stop loss and take profits to percentages rather than actual numbers.
