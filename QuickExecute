@@ -1,0 +1,298 @@
+This script allows you to quickly execute trades from the terminal using bybit API. 
+import credentials
+from pybit import usdt_perpetual
+
+# Bybit API for Trade Execution
+session_auth = usdt_perpetual.HTTP(
+    endpoint="https://api.bybit.com",
+    api_key=credentials.KEY,
+    api_secret=credentials.SECRET
+    )
+
+session_unauth = usdt_perpetual.HTTP(
+    endpoint="https://api.bybit.com",
+    api_key=credentials.KEY,
+    api_secret=credentials.SECRET
+    )
+
+# Inputs
+while True:
+    orderSymbol = input('Symbol? (exclude USDT) ')+'USDT'
+    orderType = input('Order Type? (B1/B3/S1/S3) ')
+    entryPrice = float(input('Entry Price? '))
+    stopLoss = float(input('Stop Loss? '))
+    takeProfit = float(input('Take Profit? '))
+    orderSize = float(input('Order Size (USDT)? '))
+    print(
+        '------------------------------------------------------------------------', '\n',
+        ' orderSymbol:', orderSymbol, '\n',
+        ' orderType:', orderType, '\n',
+        'entryPrice:', entryPrice, '\n',
+        'stopLoss:', stopLoss, '\n',
+        'takeProfit:', takeProfit, '\n',
+        'orderSize:', orderSize, '\n',
+        '------------------------------------------------------------------------', '\n'
+        )
+
+    if input('Are These Details Correct?, (Y or N)') == 'Y':
+        print('Placing Order(s)... Please Wait!')
+        break
+    else:
+        print('Order Details Incorrect, Please Input Details Again')
+
+
+# Set Leverage
+def max_leverage():
+    if 'BTCUSDT' == orderSymbol:
+        max_lev = 100
+    elif 'ETHUSDT' == orderSymbol:
+        max_lev = 100
+    else:
+        max_lev = 50
+
+    return max_lev
+
+def buyOrder():
+    sl_pct = round(((entryPrice) / (stopLoss) - 1), 3) * 100
+    return sl_pct
+
+def sellOrder():
+    sl_pct = round(((stopLoss) / (entryPrice) - 1), 3) * 100
+    return sl_pct
+
+# Adjusting SL
+
+if 'B1' == orderType:
+    sl_pct = buyOrder()
+elif 'B3' == orderType:
+    sl_pct = buyOrder()
+elif 'S1' == orderType:
+    sl_pct = sellOrder()    
+elif 'S3' == orderType:
+    sl_pct = sellOrder()
+
+if sl_pct < 1:
+    sl_pct = 1
+else:
+    pass
+
+max_lev = max_leverage()
+leverage = round((max_lev / sl_pct), 2)
+quantity = round(((orderSize * leverage) / (entryPrice)), 3)
+
+positionDetails = session_auth.my_position(
+symbol=orderSymbol,
+)
+positionInfo = (positionDetails['result'])[0]['leverage']
+def set_leverage():
+            session_auth.set_leverage(
+                symbol=orderSymbol,
+                buy_leverage=leverage,
+                sell_leverage=leverage
+            )
+           
+if positionInfo == leverage:
+    pass
+else:
+    try:
+        set_leverage()
+    except:
+        try:
+            leverage = 25
+            set_leverage()
+        except:
+            print('Unable to Set Leverage')
+
+def B1():
+    session_auth.place_active_order(
+    symbol=orderSymbol,
+    side="Buy",
+    order_type="Limit",
+    qty=quantity,
+    price=entryPrice,
+    take_profit=takeProfit,
+    stop_loss=stopLoss,
+    time_in_force="GoodTillCancel",
+    reduce_only=False,
+    close_on_trigger=False
+    )
+    print(
+        '------------------------------------------------------------------------', '\n'
+        'Order to buy', str(quantity), 'of', positionDetails['result'][0]['symbol'], 'has been set.', '\n'
+        'Entry: ' + str(entryPrice), '| SL: ' + str(stopLoss), '| TP: ' + str(takeProfit), '\n'
+        'Leverage:', str(leverage) + 'x', 
+        '------------------------------------------------------------------------', '\n'
+        )
+
+def B3():
+    price_50 = round(((entryPrice) * 1.002), 3)
+    price_30 = round((entryPrice), 3)
+    price_20 = round((((1 - (((sl_pct) / 2) / 100))) * (entryPrice)), 3)
+
+    quantity_50 = round((quantity * 0.48), 3)
+    quantity_30 = round((quantity * 0.28), 3)
+    quantity_20 = round((quantity * 0.18), 3)
+       
+    # Order 1
+    def place_buy_order_1():
+        session_auth.place_active_order(
+        symbol=orderSymbol,
+        side="Buy",
+        order_type="Limit",
+        qty=quantity_50,
+        price=price_50,
+        take_profit=takeProfit,
+        stop_loss=stopLoss,
+        time_in_force="GoodTillCancel",
+        reduce_only=False,
+        close_on_trigger=False
+        )
+
+
+    # Order 2
+    def place_buy_order_2():
+        session_auth.place_active_order(
+        symbol=orderSymbol,
+        side="Buy",
+        order_type="Limit",
+        qty=quantity_30,
+        price=price_30,
+        take_profit=takeProfit,
+        stop_loss=stopLoss,
+        time_in_force="GoodTillCancel",
+        reduce_only=False,
+        close_on_trigger=False
+        )
+
+    # Order 3
+    def place_buy_order_3():
+        session_auth.place_active_order(
+        symbol=orderSymbol,
+        side="Buy",
+        order_type="Limit",
+        qty=quantity_20,
+        price=price_20,
+        take_profit=takeProfit,
+        stop_loss=stopLoss,
+        time_in_force="GoodTillCancel",
+        reduce_only=False,
+        close_on_trigger=False
+        )
+
+    place_buy_order_1()
+    place_buy_order_2()
+    place_buy_order_3()
+    print(
+            '------------------------------------------------------------------------', '\n'
+            'Order to buy', quantity, 'of', positionDetails['result'][0]['symbol'], 'has been set.', '\n',
+            'Order 1:', quantity_50, 'at', price_50, '\n'
+            'Order 2:', quantity_30, 'at', price_30, '\n'
+            'Order 3:', quantity_20, 'at', price_20, '\n'
+            'Avg Entry: ' + str(entryPrice), '| SL: ' + str(stopLoss), '| TP: ' + str(takeProfit), '\n'
+            'Leverage:', str(leverage) + 'x', '\n' 
+            '------------------------------------------------------------------------', '\n'
+            )
+
+def S1():
+
+    session_auth.place_active_order(
+    symbol=orderSymbol,
+    side="Sell",
+    order_type="Limit",
+    qty=quantity,
+    price=entryPrice,
+    take_profit=takeProfit,
+    stop_loss=stopLoss,
+    time_in_force="GoodTillCancel",
+    reduce_only=False,
+    close_on_trigger=False
+    )
+    print(
+        '------------------------------------------------------------------------', '\n'
+        'Order to sell', str(quantity), 'of', positionDetails['result'][0]['symbol'], 'has been set.', '\n'
+        'Entry: ' + str(entryPrice), '| SL: ' + str(stopLoss), '| TP: ' + str(takeProfit), '\n'
+        'Leverage:', str(leverage) + 'x', 
+        '------------------------------------------------------------------------', '\n'
+    )
+
+def S3():
+    price_50 = round(((1 - (0.2 / 100)) * (entryPrice)), 3)
+    price_30 = round((entryPrice), 3)
+    price_20 = round((((entryPrice) * (1 + (sl_pct * 0.5) / 100))), 3)
+
+    quantity_50 = round((quantity * 0.48), 3)
+    quantity_30 = round((quantity * 0.28), 3)
+    quantity_20 = round((quantity * 0.18), 3)
+
+    # Order 1
+    def place_sell_order_1():
+        session_auth.place_active_order(
+        symbol=orderSymbol,
+        side="Sell",
+        order_type="Limit",
+        qty=quantity_50,
+        price=price_50,
+        take_profit=takeProfit,
+        stop_loss=stopLoss,
+        time_in_force="GoodTillCancel",
+        reduce_only=False,
+        close_on_trigger=False
+        )
+
+    # Order 2
+    def place_sell_order_2():
+        session_auth.place_active_order(
+        symbol=orderSymbol,
+        side="Sell",
+        order_type="Limit",
+        qty=quantity_30,
+        price=price_30,
+        take_profit=takeProfit,
+        stop_loss=stopLoss,
+        time_in_force="GoodTillCancel",
+        reduce_only=False,
+        close_on_trigger=False
+        )
+
+    # Order 3
+    def place_sell_order_3():
+        session_auth.place_active_order(
+        symbol=orderSymbol,
+        side="Sell",
+        order_type="Limit",
+        qty=quantity_20,
+        price=price_20,
+        take_profit=takeProfit,
+        stop_loss=stopLoss,
+        time_in_force="GoodTillCancel",
+        reduce_only=False,
+        close_on_trigger=False
+        )
+
+    place_sell_order_1()
+    place_sell_order_2()
+    place_sell_order_3()
+    
+    print(
+            '------------------------------------------------------------------------', '\n'
+            ' Order to sell', quantity, 'of', positionDetails['result'][0]['symbol'], 'has been set.', '\n',
+            'Order 1:', quantity_50, 'at', price_50, '\n'
+            ' Order 2:', quantity_30, 'at', price_30, '\n'
+            ' Order 3:', quantity_20, 'at', price_20, '\n'
+            ' Avg Entry: ' + str(entryPrice), '| SL: ' + str(stopLoss), '| TP: ' + str(takeProfit), '\n'
+            ' Leverage:', str(leverage) + 'x', '\n' 
+            '------------------------------------------------------------------------', '\n'
+            )
+
+if orderType == 'B1':
+    B1()
+elif orderType == 'S1':
+    S1()
+elif orderType == 'B3':
+    B3()
+elif orderType == 'S3':
+    S3()
+else:
+    print('Error Executing Order, Please Recheck Inputs')
+
+
