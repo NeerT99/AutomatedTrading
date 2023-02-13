@@ -22,8 +22,8 @@ The way the script works is as follows:
   note: S1 indicates a single limit sell order. An S3 order is a sell limit order split into 3 around the entry price. 
   5. The algo file runs an infinite loop that scrapes the outlook inbox constantly over specified intervals. Each email will execute a trade.
 
-Gathering Data:
---------------------- In Progress***
+Gathering Data: (In Progress***)
+--------------------- 
 the getCMCdata script will:
   1. use the selenium library to access coinmarketcap
   2. print all the top winners and losers from the last 1h, 24hrs and 7d
