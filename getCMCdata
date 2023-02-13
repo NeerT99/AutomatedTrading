@@ -1,0 +1,140 @@
+# This script will use the selenium library to scrape the top winners and losers from coinmarketcap
+from selenium.webdriver.common.by import By
+import undetected_chromedriver as uc
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import WebDriverWait
+import time
+
+URL = 'https://coinmarketcap.com/'
+
+# initialize webdriver
+driver = uc.Chrome()
+
+# navigate to website
+driver.get(URL)
+
+# Close Cookies
+wait = WebDriverWait(driver, 10)
+close_button = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, ".cmc-cookie-policy-banner__close")))
+close_button.click()
+# time.sleep(0.5)
+
+def getTopMC(n):
+    for i in range(1, n):
+        symbol = driver.find_element("xpath", "//*[@id='__next']/div/div[1]/div[2]/div/div[1]/div[4]/table/tbody/tr[" + str(i) + "]/td[3]/div/a/div/div/div/p")
+        symbol_value = symbol.text
+        price = driver.find_element("xpath", "//*[@id='__next']/div/div[1]/div[2]/div/div[1]/div[4]/table/tbody/tr[" + str(i) + "]/td[4]/div/a/span")
+        price_value = price.text
+        print(f"{symbol_value} | {price_value}")
+        
+def getWinners(n):
+    sevenDay = driver.find_element("xpath", "//*[@id='__next']/div/div[1]/div[2]/div/div[1]/div[4]/table/thead/tr/th[7]/div/div/div/p")
+    sevenDay.click()
+    for i in range(1, n):
+        symbol = driver.find_element("xpath", "//*[@id='__next']/div/div[1]/div[2]/div/div[1]/div[4]/table/tbody/tr[" + str(i) + "]/td[3]/div/a/div/div/div/p")
+        symbol_value = symbol.text
+        price = driver.find_element("xpath", "//*[@id='__next']/div/div[1]/div[2]/div/div[1]/div[4]/table/tbody/tr[" + str(i) + "]/td[4]/div/a/span")
+        price_value = price.text
+        sevenDay = driver.find_element("xpath", "//*[@id='__next']/div/div[1]/div[2]/div/div[1]/div[4]/table/tbody/tr[" + str(i) + "]/td[7]/span")
+        sevenDayUp_value = sevenDay.text
+        print(f"{symbol_value} | {price_value} | {'+'+sevenDayUp_value}")
+
+def get24hWinners(n):
+    twentyfourHour = driver.find_element("xpath", "//*[@id='__next']/div/div[1]/div[2]/div/div[1]/div[4]/table/thead/tr/th[6]/div/div/div/p")
+    twentyfourHour.click()
+    for i in range(1, n):
+        symbol = driver.find_element("xpath", "//*[@id='__next']/div/div[1]/div[2]/div/div[1]/div[4]/table/tbody/tr[" + str(i) + "]/td[3]/div/a/div/div/div/p")
+        symbol_value = symbol.text
+        price = driver.find_element("xpath", "//*[@id='__next']/div/div[1]/div[2]/div/div[1]/div[4]/table/tbody/tr[" + str(i) + "]/td[4]/div/a/span")
+        price_value = price.text
+        twentyfourHour = driver.find_element("xpath", "//*[@id='__next']/div/div[1]/div[2]/div/div[1]/div[4]/table/tbody/tr[" + str(i) + "]/td[6]/span")
+        twentyfourHourUp_value = twentyfourHour.text
+        print(f"{symbol_value} | {price_value} | {'+'+twentyfourHourUp_value}")
+
+def get1hWinners(n):
+    oneHour = driver.find_element("xpath", "//*[@id='__next']/div/div[1]/div[2]/div/div[1]/div[4]/table/thead/tr/th[5]/div/div/div/p")
+    oneHour.click()
+    for i in range(1, n):
+        symbol = driver.find_element("xpath", "//*[@id='__next']/div/div[1]/div[2]/div/div[1]/div[4]/table/tbody/tr[" + str(i) + "]/td[3]/div/a/div/div/div/p")
+        symbol_value = symbol.text
+        price = driver.find_element("xpath", "//*[@id='__next']/div/div[1]/div[2]/div/div[1]/div[4]/table/tbody/tr[" + str(i) + "]/td[4]/div/a/span")
+        price_value = price.text
+        oneHour = driver.find_element("xpath", "//*[@id='__next']/div/div[1]/div[2]/div/div[1]/div[4]/table/tbody/tr[" + str(i) + "]/td[5]/span")
+        oneHourUp_value = oneHour.text
+        print(f"{symbol_value} | {price_value} | {'+'+oneHourUp_value}")
+
+def getLosers(n):
+    sevenDay = driver.find_element("xpath", "//*[@id='__next']/div/div[1]/div[2]/div/div[1]/div[4]/table/thead/tr/th[7]/div/div/div/p")
+    sevenDay.click()
+    time.sleep(0.1)
+    sevenDay.click()
+    for i in range(1, n):
+        symbol = driver.find_element("xpath", "//*[@id='__next']/div/div[1]/div[2]/div/div[1]/div[4]/table/tbody/tr[" + str(i) + "]/td[3]/div/a/div/div/div/p")
+        symbol_value = symbol.text
+        price = driver.find_element("xpath", "//*[@id='__next']/div/div[1]/div[2]/div/div[1]/div[4]/table/tbody/tr[" + str(i) + "]/td[4]/div/a/span")
+        price_value = price.text
+        sevenDay = driver.find_element("xpath", "//*[@id='__next']/div/div[1]/div[2]/div/div[1]/div[4]/table/tbody/tr[" + str(i) + "]/td[7]/span")
+        sevenDayDown_value = sevenDay.text
+        print(f"{symbol_value} | {price_value} | {'-'+sevenDayDown_value}")
+
+
+    
+def get24hLosers(n):
+    twentyfourHour = driver.find_element("xpath", "//*[@id='__next']/div/div[1]/div[2]/div/div[1]/div[4]/table/thead/tr/th[6]/div/div/div/p")
+    twentyfourHour.click()
+    time.sleep(0.1)
+    twentyfourHour.click()
+    for i in range(1, n):
+        symbol = driver.find_element("xpath", "//*[@id='__next']/div/div[1]/div[2]/div/div[1]/div[4]/table/tbody/tr[" + str(i) + "]/td[3]/div/a/div/div/div/p")
+        symbol_value = symbol.text
+        price = driver.find_element("xpath", "//*[@id='__next']/div/div[1]/div[2]/div/div[1]/div[4]/table/tbody/tr[" + str(i) + "]/td[4]/div/a/span")
+        price_value = price.text
+        twentyfourHour = driver.find_element("xpath", "//*[@id='__next']/div/div[1]/div[2]/div/div[1]/div[4]/table/tbody/tr[" + str(i) + "]/td[6]/span")
+        twentyfourHourDown_value = twentyfourHour.text
+        print(f"{symbol_value} | {price_value} | {'-'+twentyfourHourDown_value}")
+
+
+def get1hLosers(n):
+    oneHour = driver.find_element("xpath", "//*[@id='__next']/div/div[1]/div[2]/div/div[1]/div[4]/table/thead/tr/th[5]/div/div/div/p")
+    oneHour.click()
+    time.sleep(0.1)
+    oneHour.click()
+    for i in range(1, n):
+        symbol = driver.find_element("xpath", "//*[@id='__next']/div/div[1]/div[2]/div/div[1]/div[4]/table/tbody/tr[" + str(i) + "]/td[3]/div/a/div/div/div/p")
+        symbol_value = symbol.text
+        price = driver.find_element("xpath", "//*[@id='__next']/div/div[1]/div[2]/div/div[1]/div[4]/table/tbody/tr[" + str(i) + "]/td[4]/div/a/span")
+        price_value = price.text
+        oneHour = driver.find_element("xpath", "//*[@id='__next']/div/div[1]/div[2]/div/div[1]/div[4]/table/tbody/tr[" + str(i) + "]/td[5]/span")
+        oneHourDown_value = oneHour.text
+        print(f"{symbol_value} | {price_value} | {'-'+oneHourDown_value}")
+
+# Get Current MarketCaps
+print('\n Top 10 by Market Cap')
+getTopMC(11)
+time.sleep(0.1)
+
+print('\n Top 10 Winners by 7D%:')
+getWinners(11)
+time.sleep(0.1)
+print('\n Top 10 Winners by 24h%:')
+get24hWinners(11)
+time.sleep(0.1)
+print('\n Top 10 Winners by 1h%:')
+get1hWinners(11)
+time.sleep(0.1)
+
+print('\n Top 10 Losers by 7D%:')
+getLosers(11)
+time.sleep(0.1)
+print('\n Top 10 Losers by 24h%:')
+get24hLosers(11)
+time.sleep(0.1)
+print('\n Top 10 Losers by 1h%:')
+get1hLosers(11)
+
+print('Done!')
+time.sleep(10)
+# Close the driver
+driver.quit()
+
+
