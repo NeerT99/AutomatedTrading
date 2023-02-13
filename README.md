@@ -8,8 +8,8 @@ If you would like to lower the risk, change the leverage values and order sizes 
 
 Quick Execute:
 --------------------
-This script is using a strategy that maximises leverage given order size and stoploss.
-This is not an automated script but rather a manual script which you can use to set a limit order on bybit from the terminal itself.
+This is not an automated script but rather a manual script which you can use to instantly set a limit order on bybit from the terminal itself.
+note: This script maximises leverage given order size and stoploss so manage risk carefully.
 
 The Automated Trader:
 ---------------------
