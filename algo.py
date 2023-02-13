@@ -4,6 +4,7 @@ import time
 from datetime import datetime
 
 # Set the interval and number of hours to run for
+# With this current interval - this runs every 12 seconds for 1 hour.
 INTERVAL = 0.2
 HOURS = 1
 
@@ -12,7 +13,7 @@ now = datetime.now()
 current_time = now.strftime("%H:%M:%S")
 minutes = HOURS * 60
 runtime = int(minutes / INTERVAL)
-sleeptime = INTERVAL * 60 # Run for 1hr with intervals of 5mins
+sleeptime = INTERVAL * 60 
 i = 0
 
 # Print a message to indicate that the loop is starting
