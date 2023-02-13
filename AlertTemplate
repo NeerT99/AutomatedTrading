@@ -1,0 +1,27 @@
+"""
+Example:
+{
+    "OrderType": "B1",
+    "EntryPrice": "15000",
+    "StopLoss": "14000",
+    "TakeProfit": "16000",
+    "Symbol": "BTC"
+}
+"""
+
+import json
+
+myOrder = {
+    "OrderType": input("Order Type? (B1/B3/S1/S3) "),
+    "EntryPrice": float(input("Entry Price? ")),
+    "StopLoss": float(input("Stop Loss? ")),
+    "TakeProfit": float(input("Take Profit? ")),
+    "Symbol": input("Symbol? (exclude USDT) ")+"USDT",
+}
+
+# Convert the dictionary to a JSON string with double quotation marks
+json_string = json.dumps(myOrder)
+
+# Print the JSON string
+print(json_string)
+
