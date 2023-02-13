@@ -1,4 +1,4 @@
-# Analysis-and-Research
+# Trading Tools
 
 The Goal of this repository is to create a script that will automate my trading. The repository contains multiple scripts all with different purposes. The details of each script is given below. Please be careful as some of these scripts involve the use of high leverage trading and this is not advised!
 
