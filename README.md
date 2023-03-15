@@ -7,7 +7,7 @@ TradingView is used to create either:
 Pine Script strategies that output alerts.
 Both of these will output an alert in a specific format. This alert is then sent to a ngrok server via webhook, which is locally tunneled to our Flask application. The Flask application parses the details of the webhook and executes the trades on Bybit and Binance. This approach is faster, more scalable, and secure compared to the previous system which relied on email alerts and scraping.
 
-Repository Contents
+# Repository Contents
 - credentials.py - Update this file to include your API keys for the desired exchanges.
 
 - algo.py - The main script running the trading system. It contains the Flask application that receives and parses the webhook, and executes the trades. Comments are included throughout the file to explain each step.
