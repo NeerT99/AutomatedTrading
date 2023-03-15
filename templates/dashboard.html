@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Trading Dashboard</title>
+    <style>
+        body {
+            background-color: #f2f2f2;
+            color: #333;
+            font-family: "SF Pro Display", "SF Pro Icons", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+            font-size: 16px;
+            font-weight: 400;
+            line-height: 1.5;
+            margin: 0;
+        }
+        h1 {
+            font-size: 2em;
+            margin-bottom: 0.5em;
+            text-align: center;
+            text-transform: uppercase;
+        }
+        
+        h2 {
+            font-size: 1.5em;
+            margin-bottom: 0.5em;
+            text-align: center;
+            text-transform: uppercase;
+        }
+
+        table {
+            margin: 2rem auto;
+            border-collapse: separate;
+            border-spacing: 0;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            max-width: 960px;
+            width: 100%;
+        }
+        th, td {
+            padding: 1rem;
+            text-align: center;
+        }
+        th {
+            background-color: #f5f5f5;
+            font-weight: 700;
+            color: #333;
+            text-align: center;
+        }
+        tr:nth-child(even) {
+            background-color: #ffffff;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 1rem auto;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            max-height: 200px;
+        }
+        iframe {
+            max-width: 100%;
+            height: 315px;
+            display: block;
+            margin: 1rem auto;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .page-container {
+            display: flex;
+            flex-wrap: wrap;
+            max-width: 100vw;
+            margin: 0 auto;
+        }
+
+
+        .trading-quarter {
+            flex: 0 0 50%;
+            padding: 1rem;
+        }
+
+        .blank-quarter {
+            flex: 0 0 25%;
+            padding: 1rem;
+        }
+
+        .trading-quarter,
+        .winners-losers-container {
+            flex: 0 0 50%;
+            padding: 1rem;
+        }
+
+        .winners-quarter,
+        .losers-quarter {
+            flex: 0 0 50%;
+            padding: 1rem;
+            box-sizing: border-box;
+        }
+
+            </style>
+</head>
+
+<body>
+    <div class="page-container">
+        <div class="trading-quarter">
+            <h1>Trading Dashboard</h1>
+          <img src="https://i.etsystatic.com/23271755/r/il/721bda/2390352195/il_1080xN.2390352195_ibkp.jpg" />
+          <h2>Spot Positions</h2>
+          <table class="trades-table">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Trade Type</th>
+                <th>Order Symbol</th>
+                <th>Side</th>
+                <th>Price</th>
+                <th>Order Size</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for trade in trades %}
+              <tr>
+                <td>{{ trade[0] }}</td>
+                <td>{{ trade[1] }}</td>
+                <td>{{ trade[2] }}</td>
+                <td>{{ trade[3] }}</td>
+                <td>{{ trade[4] }}</td>
+                <td>{{ trade[5] }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+          <h2>Open Positions</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Symbol</th>
+                        <th>Side</th>
+                        <th>Entry Price</th>
+                        <th>Position Value</th>
+                        <th>Position Margin</th>
+                        <th>Leverage</th>
+                        <th>Unrealized P&L</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for position in positions %}
+                    <tr>
+                        <td>{{ position['symbol'] }}</td>
+                        <td>{{ position['side'] }}</td>
+                        <td>{{ position['entry_price'] }}</td>
+                        <td>{{ position['position_value'] }}</td>
+                        <td>{{ position['position_margin'] }}</td>
+                        <td>{{ position['leverage'] }}</td>
+                        <td>{{ position['unrealised_pnl'] }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="tradingview-widget-container">
+            <div class="tradingview-widget-container__widget"></div>
+            <div class="tradingview-widget-copyright"><a href="https://www.tradingview.com/economic-calendar/" rel="noopener" target="_blank"><span class="blue-text">Economic calendar</span></a> by TradingView</div>
+            <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-events.js" async>
+            {
+            "colorTheme": "light",
+            "isTransparent": false,
+            "width": "510",
+            "height": "600",
+            "locale": "en",
+            "importanceFilter": "-1,0,1",
+            "currencyFilter": "AUD,USD,CAD,EUR,FRF,DEM,ITL,JPY,MXN,NZD,ZAR,ESP,CHF,TRL,GBP"
+            }
+            </script>
+        </div>
+
+        <div class="tradingview-widget-container">
+            <div class="tradingview-widget-container__widget"></div>
+            <div class="tradingview-widget-copyright"><a href="https://www.tradingview.com/markets/indices/" rel="noopener" target="_blank"><span class="blue-text">Symbols</span></a> by TradingView</div>
+            <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-market-overview.js" async>
+            {
+            "colorTheme": "light",
+            "dateRange": "12M",
+            "showChart": false,
+            "locale": "en",
+            "largeChartUrl": "",
+            "isTransparent": false,
+            "showSymbolLogo": true,
+            "showFloatingTooltip": false,
+            "width": "400",
+            "height": "465",
+            "tabs": [
+            {
+                "title": "Symbols",
+                "symbols": [
+                {
+                    "s": "CME_MINI:ES1!",
+                    "d": "SP500"
+                },
+                {
+                    "s": "CME_MINI:NQ1!",
+                    "d": "QQQ"
+                },
+                {
+                    "s": "BITFINEX:BTCUSD",
+                    "d": "BTC"
+                },
+                {
+                    "s": "BITFINEX:ETHUSD",
+                    "d": "ETH"
+                },
+                {
+                    "s": "INDEX:DXY"
+                },
+                {
+                    "s": "CAPITALCOM:VIX",
+                    "d": "VIX"
+                }
+                ],
+                "originalTitle": "Indices"
+            }
+            ]
+        }
+            </script>
+        </div>
+        
+        <div class="winners-losers-container">
+            <div class="winners-quarter">
+                <h2>Top Winners (24h) </h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Symbol</th>
+                            <th>Change (24h)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for winner in winners %}
+                        <tr>
+                            <td>{{ winner[0] }}</td>
+                            <td>{{ winner[1] }}%</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <div class="losers-quarter"></div>
+                    <h2>Top Losers (24h) </h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Symbol</th>
+                                <th>Change (24h)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for loser in losers %}
+                            <tr>
+                                <td>{{ loser[0] }}</td>
+                                <td>{{ loser[1] }}%</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            </div>
+        </div>
+  </body>
+  </html>

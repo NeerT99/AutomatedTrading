@@ -1,0 +1,36 @@
+//@version=5
+// This is a pinescript strategy that will issue a sell signal when the monthly RSI is above 90 or when it is above 80 and starts trending down
+strategy(title="RSI Spot Monthly Exits", overlay=true, pyramiding=100)
+
+// RSI
+rsiLen = input.int(title="RSI Length", defval=14)
+
+sellAmount = input.float(title="Sell Amount", defval=100)
+
+rsi = ta.rsi(close, rsiLen) 
+
+rsiPrev = ta.valuewhen(barstate.isconfirmed[1], rsi[1], 0)
+sellCondition = rsi > 80 and rsiPrev > rsi or rsi > 90
+
+// Declare entryPrice and orderSymbol 
+var float entryPrice = na 
+var string orderSymbol = na
+
+// Assign value to orderSymbol 
+orderSymbol := syminfo.ticker
+// Check if "USDT" is in orderSymbol
+if str.contains(orderSymbol, "USDT") 
+// Replace "USDT" with "" (empty string) in orderSymbol 
+    orderSymbol := str.replace(orderSymbol, "USDT", "") 
+else // Replace "USD" with "" (empty string) in orderSymbol 
+    orderSymbol := str.replace(orderSymbol, "USD", "")
+
+// Define your webhook data 
+webhookData = '{"passphrase": "passphrase", "TradeType": "MRSI", "OrderType": "S1", "EntryPrice": "' + str.tostring(entryPrice) + '", "StopLoss": "50", "TakeProfit": "50", "OrderSymbol": " '+ orderSymbol + '" }' 
+
+// Trigger an alert when buyCondition is true 
+if sellCondition 
+    entryPrice := close
+    strategy.entry(id="S1", direction=strategy.short)
+    alert(message=webhookData, freq=alert.freq_once_per_bar_close)
+

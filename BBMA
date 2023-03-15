@@ -1,0 +1,49 @@
+//@version=5 
+// This is a strategy to buy BTC when the price crosses the lower bollinger band and is below the 200 MA on a weekly time frame.
+
+strategy(title="BBMA Spot Strategy", overlay=true, pyramiding=100000)
+
+// MA 
+maLen = input.int(title="MA Length", defval=200) 
+ma = ta.sma(close, maLen) 
+plot(series=ma, color=color.blue)
+
+// BB 
+bbLen = input.int(title="BB Length", defval=20) 
+bbMult = input.float(title="BB StdDev", defval=2.0) 
+bbBasis = ta.sma(close, bbLen) 
+
+// BB Lower
+bbDev = bbMult * ta.stdev(close, bbLen) 
+bbLower = bbBasis - bbDev 
+plot(series=bbLower, color=color.green)
+
+// BB Upper 
+bbUpper = bbBasis + bbDev 
+plot(series=bbUpper, color=color.green)
+
+enterLong = close < ma and low < bbLower
+// Declare entryPrice and orderSymbol 
+var float entryPrice = na 
+var string orderSymbol = na
+
+ 
+// Check if "USDT" or "USD" is in orderSymbol and strip it
+orderSymbol := syminfo.ticker
+if str.contains(orderSymbol, "USDT") 
+    orderSymbol := str.replace(orderSymbol, "USDT", "") 
+    orderSymbol := str.replace(orderSymbol, "USD", "")
+
+// Define your webhook data
+webhookData = '{"passphrase": "passphrase", "TradeType": "BBMA", "OrderType": "B1", "EntryPrice": "' + str.tostring(entryPrice) + '", "StopLoss": "50", "TakeProfit": "50", "OrderSymbol": " '+ orderSymbol + '" }' 
+
+
+if enterLong 
+    entryPrice := close
+    strategy.entry(id="B1", direction=strategy.long)
+    alert(message=webhookData, freq=alert.freq_once_per_bar_close)
+    
+
+
+
+    
