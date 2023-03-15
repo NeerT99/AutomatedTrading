@@ -26,7 +26,7 @@ Both of these will output an alert in a specific format. This alert is then sent
 
 # Getting Started
 Update the credentials.py file with your exchange API keys and customize the trading strategies in the algo.py file according to your preferences.
-Run the algo.py file and use ./ngrok http 5000 in a separate terminal to connect your local host to ngrok. Copy the link of the ngrok server and paste the URL of the server follwed by /webhook in the webhook URL of the alert in tradingview like this -> "https://xxxx-xxxx-xxxx-xxxx-xxxx-xxx-xxxx-xxxx-xxxx.eu.ngrok.io/webhook". 
+Run the algo.py file and use ./ngrok http 5000 in a separate terminal to connect your local host to ngrok. Copy the link of the ngrok server and paste the URL of the server follwed by /webhook in the webhook URL of the alert in tradingview like this -> "https:// xxxx-xxxx-xxxx-xxxx-xxxx-xxx-xxxx-xxxx-xxxx.eu.ngrok .io/webhook". 
 
 # Contributing
 Feel free to fork this repository, make changes, and submit pull requests. If you have any questions or suggestions, please open an issue.
