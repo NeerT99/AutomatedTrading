@@ -189,8 +189,8 @@ class BybitScalp(BybitExchange):
     '''
     def __init__(self):
         endpoint="https://api.bybit.com"
-        api_key=credentials.BB_KEY
-        api_secret=credentials.BB_SECRET
+        api_key=credentials.BB_KEY2
+        api_secret=credentials.BB_SECRET2
         
         # as this is lower time frame, smaller order sizes are preferred as higher risk
         ORDER_SIZE = {
