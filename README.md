@@ -3,9 +3,10 @@ This repository provides an automated trading system that combines the alert fea
 
 TradingView is used to create either:
 
-# Manual alerts.
-Pine Script strategies that output alerts.
-Both of these will output an alert in a specific format. This alert is then sent to a ngrok server via webhook, which is locally tunneled to our Flask application. The Flask application parses the details of the webhook and executes the trades on Bybit and Binance. This approach is faster, more scalable, and secure compared to the previous system which relied on email alerts and scraping.
+- Manual alerts.
+- Pine Script strategies that output alerts.
+
+Both of these will output an alert in a specific format. This alert is then sent to a ngrok server via webhook, which is locally tunneled to our Flask application. The Flask application parses the details of the webhook and executes the trades on Bybit and Binance. This approach is faster, more scalable, and secure compared to the previous system which relied on email scraping alerts every 5 minutes.
 
 # Repository Contents
 - credentials.py - Update this file to include your API keys for the desired exchanges.
