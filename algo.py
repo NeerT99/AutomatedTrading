@@ -151,8 +151,7 @@ class BybitExchange:
             side=side,
             order_type="Market",
             qty=orderQty,
-            take_profit_price=takeProfit,
-            stop_loss_price=stopLoss,
+            take_profit=takeProfit,
             time_in_force="GoodTillCancel",
             reduce_only=False,
             close_on_trigger=False
